@@ -1,92 +1,143 @@
-# 🔐 Projeto de Segurança Cibernética – LojaZeta  
+# 🚀 Desafio Final – Módulo 2 Defesa e Monitoramento  
+Projeto Final Módulo 2 Defesa e Monitoramento – Formação CyberSec (Vai na Web + Kensei Cybersec)
 
-Desafio Final do módulo de Fundamentos em Cibersegurança do curso Formação CyberSec da escola Vai na Web juntamente com a Kensei Cybersec.  
-
-💼 **Projeto de Arquitetura de Defesa em Camadas e Monitoramento – LojaZeta (e-commerce fictício)**  
-Este repositório contém a proposta completa de segurança para a LojaZeta, um e-commerce em crescimento hospedado em infraestrutura de nuvem (IaaS), que enfrentou incidentes recentes de **SQLi, XSS e brute-force** em `/login`.  
-
----
-
-## 🧠 Objetivo do Projeto  
-Desenvolver uma **arquitetura de defesa em camadas**, com foco em **monitoramento centralizado, resposta a incidentes estruturada (NIST IR)** e **plano de implementação viável** dentro das restrições de equipe e orçamento, garantindo **resiliência, visibilidade e redução de riscos**.  
+💼 **Projeto de Segurança para LojaZeta (E-commerce fictício)**  
+Este projeto tem como objetivo apresentar uma proposta de segurança e monitoramento destinada à empresa fictícia LojaZeta, a qual atua no setor de comércio eletrônico e enfrentou recentemente incidentes relacionados à segurança cibernética.
 
 ---
 
-## 🏗️ Etapas de Desenvolvimento  
+## 🧠 Objetivo do Projeto
+Implementar uma estratégia de segurança cibernética com foco em:  
+- Detecção e resposta a incidentes.  
+- Fortalecimento da infraestrutura contra ataques comuns.  
+- Centralização de logs e visibilidade em tempo real.  
+- Estruturação de roadmap de ações (80/20) priorizando maior impacto.  
 
-### 1. Escopo e Metodologia  
-- Cobertura: aplicação web, banco de dados, logs e identidade.  
-- Premissas: equipe pequena e orçamento limitado → solução enxuta e priorizada.  
+---
 
-### 2. Arquitetura de Defesa em Camadas  
-- **Fluxo principal**: Internet → WAF/CRS → Load Balancer → App Node.js → PostgreSQL.  
-- IDS/IPS, segmentação de rede, firewall, backup seguro.  
-- Identidade com MFA e centralização de logs no SIEM.  
+## 🏗️ Arquitetura de Defesa em Camadas
+
 ```mermaid
 flowchart LR
-    A[🌐 Internet] --> B[🛡️ WAF / CRS]
-    B --> C[⚖️ Load Balancer]
-    C --> D[💻 App Node.js]
-    D --> E[(🗄️ PostgreSQL DB)]
+    A[Usuário/Admin] -->|MFA + Segurança de Endpoints| B[Firewall de Rede]
+    B --> C[WAF/CRS]
+    C --> D[Load Balancer]
+    D --> E[APP Node.js]
+    E --> F[(Banco PostgreSQL)]
+    F --> G[(Backup Seguro + Testes de Restauração)]
 
-    %% Monitoramento
-    D --> F[📊 Logs - Aplicação]
-    E --> G[📊 Logs - Banco de Dados]
-    C --> H[📊 Logs - Nginx]
-    subgraph SIEM
-        F --> I[SIEM Centralizado]
-        G --> I
-        H --> I
+
+    C --> H[SIEM - Coleta & Correlação de Logs]
+    D --> H
+    E --> H
+    F --> H
+    B --> H
+    H --> I[Alertas Acionáveis]
+    I --> J[SOC / Blue Team]
+
+    subgraph "Camada de Proteção e Monitoramento"
+
+        B
+        C
+        H
     end
 
-    %% Identidade
-    J[🔑 MFA / Identidade Segura] --> D
+    style F fill:#f9f,stroke:#333,stroke-width:1px
+    style H fill:#bbf,stroke:#333,stroke-width:1px
+    style J fill:#bfb,stroke:#333,stroke-width:1px
+```
+---
+## 📊 Monitoramento & SIEM
 
-### 3. Monitoramento & SIEM  
-- Fontes: Nginx, App, DB, Sistema Operacional.  
-- Correlação de eventos e alertas acionáveis.  
-- **KPIs**: MTTD, MTTR, tentativas bloqueadas, % de cobertura de logs.  
+**Fontes de Log:**  
+- Nginx  
+- Aplicação Node.js  
+- PostgreSQL  
+- Sistema Operacional  
+- Firewall  
+- WAF  
 
-### 4. Resposta a Incidentes (NIST IR)  
-- Fases: **Detecção → Contenção → Erradicação → Recuperação → Lições Aprendidas**.  
-- Runbooks específicos para SQLi, XSS, brute-force e indisponibilidade.  
+**Correlação de Eventos:**  
+- Tentativas de brute-force em `/login`.  
+- Ataques SQLi e XSS bloqueados pelo WAF.  
+- Acessos suspeitos fora da região.  
 
-### 5. Plano de Implementação (80/20)  
-- **Quick wins (30 dias)**: MFA, WAF/CRS, centralização de logs.  
-- **Médio prazo (90 dias)**: correlações no SIEM, dashboards e KPIs.  
-- **Longo prazo (180 dias)**: EDR, automação de respostas e auditorias periódicas.  
+**KPIs / Métricas:**  
+- MTTD (Mean Time to Detect).  
+- MTTR (Mean Time to Respond).  
+- Número de tentativas de ataque bloqueadas.  
+- % de cobertura de logs.  
 
-### 6. Riscos, Custos e Assunções  
-- **Riscos**: equipe reduzida, dependência da nuvem, ataques em evolução constante.  
-- **Custos**: priorização de soluções open-source.  
-- **Assunções**: equipe treinada e foco em soluções escaláveis e viáveis.  
+---
 
-### 7. Conclusão e Próximos Passos  
-- Maior visibilidade e redução imediata de riscos.  
-- Resposta estruturada a incidentes.  
-- Roadmap para evolução contínua da segurança.  
-- **Critérios de sucesso**:  
-  - Redução do MTTD/MTTR  
-  - 100% de sucesso em testes de backup  
-  - 80% de cobertura de logs  
+## 🛡️ Resposta a Incidentes (NIST IR)
+
+**Fluxo de resposta adotado:**  
+1. **Detecção** → SIEM gera alertas.  
+2. **Contenção** → Bloqueio de IPs maliciosos / isolamento de hosts.  
+3. **Erradicação** → Remoção de malware, aplicação de patches.  
+4. **Recuperação** → Restauração de backups.  
+5. **Lições Aprendidas** → Documentação e melhoria contínua.  
+
+📘 **Runbooks definidos para:** SQLi, XSS, brute-force e indisponibilidade.  
+
+---
+
+## 📅 Plano de Implementação (80/20)
+
+| Ação                          | Impacto | Facilidade | Prioridade |
+|-------------------------------|---------|------------|------------|
+| Configurar SIEM e integrar logs | Alto    | Média      | Alta     |
+| Implementar MFA para admins   | Alto    | Alta       | Alta       |
+| Reforçar regras do WAF        | Alto    | Média      | Alta       |
+| Automatizar backups/testes    | Alto    | Alta       | Alta       |
+| Criar dashboards de segurança | Médio   | Média      | Média      |
+| Definir runbooks de resposta  | Médio   | Média      | Média      |
+| Treinar equipe básica em IR   | Médio   | Alta       | Média      |
+
+---
+
+## ⚠️ Riscos, Custos e Assunções
+
+**Riscos:** falsos positivos no SIEM, custo crescente de logs.  
+**Custos Estimados:** soluções open-source (baixo custo inicial), equipe SOC reduzida.  
+**Assunções:** orçamento limitado, equipe pequena, automação é chave.  
+
+---
+
+## ✅ Conclusão e Próximos Passos
+
+Este projeto define uma arquitetura robusta, mas viável para a **LojaZeta**.  
+
+**Próximos Passos:**  
+- Integrar todos os logs ao SIEM.  
+- Criar dashboards de visibilidade.  
+- Validar runbooks em exercícios simulados.  
+
+**Critérios de Sucesso:**  
+- Redução de MTTD/MTTR.  
+- Bloqueio efetivo de SQLi/XSS.  
+- Backups testados e funcionando.  
+- Equipe preparada para responder a incidentes.  
 
 ---
 
 ## 📌 Recursos Utilizados  
 - Diagramas criados no **Draw.io** e **Mermaid (GitHub)**  
-- Documentação estruturada em **Markdown e Google Docs**   
+- Documentação estruturada em **Markdown e Google Docs**  
 - Baseado em boas práticas de **NIST, MITRE ATT&CK e CIS Controls**  
 
 ---
+
 ## ✅ Conclusão  
-Este projeto apresenta uma solução prática e viável para aumentar a segurança da LojaZeta, unindo **defesa em camadas, monitoramento inteligente e resposta a incidentes**. Mesmo com restrições de equipe e orçamento, a empresa poderá **reduzir riscos críticos**, **melhorar a resiliência operacional** e **garantir continuidade de negócios**.
+Este projeto apresenta uma solução prática e viável para aumentar a segurança da LojaZeta, unindo **defesa em camadas, monitoramento inteligente e resposta a incidentes**. Mesmo com restrições de equipe e orçamento, a empresa poderá **reduzir riscos críticos**, **melhorar a resiliência operacional** e **garantir continuidade de negócios**.  
 
 ---
 ## 📘 Documentação do Projeto  
-📘 O documento PDF completo do projeto está disponível logo acima deste README ☝️
+📘 O documento PDF completo do projeto está disponível logo acima do README.md ☝️ 
 
 ---
 
 ✍️ **Autor**  
 George Silva Monteiro  
-Entusiasta em Cybersegurança 📍 Brasil  
+*Entusiasta em Cybersegurança 📍 Brasil*  
