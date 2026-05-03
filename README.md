@@ -140,4 +140,4 @@ Este projeto apresenta uma solução prática e viável para aumentar a seguran�
 
 ✍️ **Autor**  
 George Silva Monteiro  
-*Entusiasta em Cybersegurança 📍 Brasil*  
+*Entusiasta em Cybersegurança 📍 Brasil*
